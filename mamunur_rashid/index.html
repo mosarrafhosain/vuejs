@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TODO supply a title</title>
+    <title>Vue JS Bangla Tutorial</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    <div>TODO write content</div>
+    
+    <div id="root">
+      {{ message }}
+    </div>
+    
+    <script type="text/javascript" src="vue.js"></script>
+    <script type="text/javascript">
+      var app = new Vue({
+        el: "#root",
+        data: {
+          message: "Hello World!"
+        }
+      });
+    </script>
   </body>
 </html>
