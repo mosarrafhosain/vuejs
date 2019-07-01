@@ -8,7 +8,10 @@
   <body>
     
     <div id="root">
-      {{ message }}
+      <p>Enter your name</p>
+      <input type="text" v-model="name">
+      <br>
+      <h1>Your Name is {{ name }}
     </div>
     
     <script type="text/javascript" src="vue.js"></script>
@@ -16,7 +19,10 @@
       var app = new Vue({
         el: "#root",
         data: {
-          message: "Hello World!"
+          name: "Liton"
+        },
+        mounted: function(){
+          console.log('mounted');
         }
       });
     </script>
