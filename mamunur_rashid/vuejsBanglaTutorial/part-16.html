@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue JS Bangla Tutorial</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="axios.min.js"></script>
+  </head>
+  <body>
+    
+    <div id="root">
+      
+      <button @click="getPosts()"> Call API </button>
+      
+      <div v-for="post in posts">
+        <h2> {{ post.title }} </h2>
+        <p> {{ post.body }} </p>
+      </div>
+      
+    </div>
+    
+    <script type="text/javascript" src="vue.js"></script>
+    
+    <script type="text/javascript">
+      var app = new Vue({
+        el: "#root",
+        data: {
+          posts: []
+        },
+        methods: {
+          getPosts: function(){
+            var currentApp = this;
+            axios.get("http://jsonplaceholder.typicode.com/posts")
+                    .then(function(res){
+                      currentApp.posts = res.data;
+                    });
+          }
+        }
+      });
+    </script>
+    
+  </body>
+</html>
