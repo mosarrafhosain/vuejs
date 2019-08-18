@@ -4,9 +4,7 @@
     <div class="header">
       <div class="container">
         <div class="logo">
-          <a href="https://p.w3layouts.com/demos/personal_blog/web/index.html">
-            <img src="logo.jpg" title />
-          </a>
+          <router-link to="/"><img src="logo.jpg" title /></router-link>
         </div>
         <!---start-top-nav---->
         <div class="top-menu">
