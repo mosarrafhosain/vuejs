@@ -1,0 +1,75 @@
+import Vue from 'vue';
+import App from './App.vue';
+import VueRouter from 'vue-router';
+import axios from 'axios';
+import iziToast from 'izitoast';
+import Login from './components/pages/Login.vue';
+import Admin from './components/pages/admin/Admin.vue';
+import Category from './components/pages/admin/Category.vue';
+import Supplier from './components/pages/admin/Supplier.vue';
+import Product from './components/pages/admin/Product.vue';
+import Modal from './components/others/Modal.vue';
+
+Vue.config.productionTip = false;
+Vue.use(VueRouter);
+
+var eventBus = new Vue();
+Vue.prototype.$eventBus = eventBus;
+Vue.prototype.$axios = axios;
+Vue.prototype.$iziToast = iziToast;
+Vue.prototype.$apiBaseUrl =
+  'http://localhost/github/mosarrafhosain/vuejs/mamunur_rashid/simple_ecommerce/api/public';
+
+Vue.component('modal', Modal);
+
+const routes = [
+  {
+    path: '/',
+    name: 'helloworld',
+    redirect: { path: 'login' }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
+    redirect: { path: '/admin/category' },
+    children: [
+      {
+        path: 'category',
+        name: 'admin.category',
+        component: Category
+      },
+      {
+        path: 'supplier',
+        name: 'admin.supplier',
+        component: Supplier
+      },
+      {
+        path: 'product',
+        name: 'admin.product',
+        component: Product
+      }
+    ]
+  }
+];
+
+const router = new VueRouter({
+  routes, // short for `routes: routes`
+  mode: 'history'
+});
+
+router.beforeEach((to, from, next) => {
+  axios.defaults.headers.common['Authorization'] =
+    'Token ' + localStorage.getItem('token');
+  next();
+});
+
+new Vue({
+  render: h => h(App),
+  router
+}).$mount('#app');

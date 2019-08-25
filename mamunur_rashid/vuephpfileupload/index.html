@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue js and php file upload</title>
+    <style type="text/css">
+      #app {
+        width: 555px;
+        margin: auto;
+        padding: 33px;
+        background: #e3e3e3;
+      }
+    </style>
+    <script type="text/javascript" src="vue.min.js"></script>
+    <script type="text/javascript" src="axios.min.js"></script>
+  </head>
+  <body>
+      <div id="app">
+        <h1>Normal file upload</h1>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+          <label>Select File</label>
+          <input type="file" name="fileToUpload" id="fileToUpload"> <br> <br>
+          <button type="submit">Upload Now</button>
+        </form>
+        <br>
+        <hr><br>
+        <h1>File upload with progressbar</h1>
+      
+        <label>Select File</label>
+        <input type="file" name="fileToUpload1" id="fileToUpload1"> <br> <br>
+        <progress :value="percent" max="100"> </progress> % {{percent}}
+        <br><br>
+        {{message}}
+        <br><br>
+        <button @click="upload();">Upload Now</button>
+      </div>
+
+      <script type="text/javascript">
+        var app = new Vue({
+          el: "#app",
+          data: {
+            percent: 0,
+            message: ""
+          },
+          mounted: function () {
+            console.log("mounted...");
+          },
+          methods: {
+            upload: function () {
+              var _this = this;
+              var elmnt = document.getElementById("fileToUpload1");
+              console.log(elmnt.files[0]);
+              var fd = new FormData();
+
+              fd.append("fileToUpload", elmnt.files[0], elmnt.files[0].name)
+
+              axios.post("upload.php", fd, {
+                onUploadProgress: function (uploadEvent) {
+
+                  _this.percent = Math.round((uploadEvent.loaded / uploadEvent.total) * 100);
+                }
+              })
+                .then(function (res) {
+                  console.log(res);
+                  _this.message = res.data.message;
+                })
+                .catch(function (e) {
+                  console.log(e);
+                });
+            }
+          }
+        });
+      </script>
+  </body>
+</html>
