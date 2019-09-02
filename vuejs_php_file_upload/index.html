@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>File Upload With Vue JS and PHP</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div id="myapp">
+      <input type="file" id="file" ref="file" />
+      <button type="button" @click="uploadFile()">Upload file</button>
+    </div>
+    <script>
+      var app = new Vue({
+        el: '#myapp',
+        data: {
+          file: ''
+        },
+        methods: {
+          uploadFile: function() {
+            this.file = this.$refs.file.files[0];
+            let formData = new FormData();
+            formData.append('file', this.file);
+            axios
+              .post('ajaxfile.php', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then(function(response) {
+                if (!response.data) {
+                  alert('File not uploaded.');
+                } else {
+                  alert('File uploaded successfully.');
+                }
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

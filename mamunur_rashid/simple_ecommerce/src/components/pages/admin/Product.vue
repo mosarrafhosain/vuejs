@@ -15,7 +15,7 @@
         <tr>
           <td>Catetory</td>
           <td>
-            <select v-model="newProduct.category">
+            <select v-model="newProduct.category_id">
               <option value>--Select One--</option>
               <option v-for="c in allCategories" :value="c.id">{{ c.name }}</option>
             </select>
@@ -24,7 +24,7 @@
         <tr>
           <td>Supplier</td>
           <td>
-            <select v-model="newProduct.supplier">
+            <select v-model="newProduct.supplier_id">
               <option value>--Select One--</option>
               <option v-for="s in allSuppliers" :value="s.id">{{ s.name }}</option>
             </select>
@@ -84,11 +84,48 @@
         <tr>
           <td>Product Name</td>
           <td>
-            <input
-              type="text"
-              id="editProName"
-              v-model="clickedProduct.name"
-              placeholder="Product Name"
+            <input type="text" v-model="clickedProduct.name" placeholder="Product Name" />
+          </td>
+        </tr>
+        <tr>
+          <td>Catetory</td>
+          <td>
+            <select v-model="clickedProduct.category_id">
+              <option value>--Select One--</option>
+              <option v-for="c in allCategories" :value="c.id">{{ c.name }}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Supplier</td>
+          <td>
+            <select v-model="clickedProduct.supplier_id">
+              <option value>--Select One--</option>
+              <option v-for="s in allSuppliers" :value="s.id">{{ s.name }}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td>
+            <input type="text" v-model="clickedProduct.price" placeholder="Price" />
+            &nbsp;
+            <label>
+              <input type="checkbox" v-model="clickedProduct.negotiable" /> Negotiable
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <progress :value="percent" max="100" v-if="percent != 0 && percent != 100"></progress>
+            <span v-if="percent != 0 && percent != 100">{{ percent }} %</span>
+            <br />
+            <br />
+            <img
+              :src="this.$apiBaseUrl + '/' + clickedProduct.image"
+              alt="No image selected"
+              class="thumbnail"
             />
           </td>
         </tr>
@@ -134,14 +171,22 @@
     <table class="nice-table">
       <tr>
         <th>ID</th>
+        <th>Image</th>
         <th>Name</th>
+        <th>Category</th>
+        <th>Supplier</th>
         <th>Description</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
       <tr v-for="product in products">
         <td>{{ product.id }}</td>
+        <td>
+          <img :src="$apiBaseUrl + '/' + product.image" alt="No image" class="icon" />
+        </td>
         <td>{{ product.name }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.supplier }}</td>
         <td>{{ product.description }}</td>
         <td>
           <button class="edit" @click="showingEditModal = true; clickedProduct = product">Edit</button>
@@ -166,8 +211,8 @@ export default {
       newProduct: {
         name: "",
         description: "",
-        supplier: "",
-        category: "",
+        supplier_id: "",
+        category_id: "",
         price: 0,
         negotiable: true,
         image: "img/uploads/default.jpg"
@@ -244,24 +289,23 @@ export default {
           }
         })
         .then(res => {
-          _this.newProduct.image = res.data.uploadedUrl;
+          if (res.data.error) {
+            this.$iziToast.error({
+              title: "Error",
+              message: res.data.message
+            });
+          } else {
+            this.$iziToast.success({
+              title: "Success",
+              message: res.data.message
+            });
+            _this.newProduct.image = res.data.uploadedUrl;
+          }
         });
     },
 
     addNewProduct() {
       // console.log(this.newProduct);
-
-      if (!this.newProduct.name) {
-        this.$iziToast.error({
-          title: "Error",
-          message: "Product name can not be empty!"
-        });
-
-        var proNameInput = document.getElementById("newProName");
-        proNameInput.focus();
-
-        return;
-      }
 
       this.$eventBus.$emit("loadingStatus", true);
 

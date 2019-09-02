@@ -16,7 +16,7 @@ $app->get('/get-products', function (Request $request, Response $response) {
     $out['message'] = "Invalid Token. Please login again.";
   } else {
 
-    $sql = "SELECT * FROM products";
+    $sql = "SELECT products.*, categories.name AS category, suppliers.name AS supplier FROM products LEFT JOIN categories ON categories.id = products.category_id LEFT JOIN suppliers ON suppliers.id = products.supplier_id";
 
     try {
       // Get DB Object
@@ -105,16 +105,17 @@ $app->post('/add-product', function (Request $request, Response $response) {
   $token = $token[1];
 
   $name = $request->getParam('name');
+  $category_id = $request->getParam('category_id');
+  $supplier_id = $request->getParam('supplier_id');
+  $price = $request->getParam('price');
+  $image = $request->getParam('image');
   $description = $request->getParam('description');
 
   if (empty($token)) {
     $out['error'] = true;
     $out['message'] = "Invalid Token. Please login again.";
-  } else if ($name == '') {
-    $out['error'] = true;
-    $out['message'] = "Product name is required";
   } else {
-    $sql = "INSERT INTO products (name, description) VALUES (:name, :description)";
+    $sql = "INSERT INTO products (name, category_id, supplier_id, price, image, description) VALUES (:name, :category_id, :supplier_id, :price, :image, :description)";
 
     try {
       // Get DB Object
@@ -122,21 +123,18 @@ $app->post('/add-product', function (Request $request, Response $response) {
       // Connect
       $db = $db->connect();
 
-      $stmt = $db->query("SELECT * FROM users WHERE token='$token'");
-      if ($stmt->rowCount() > 0) {
+      $stmt = $db->prepare($sql);
 
-        $stmt = $db->prepare($sql);
+      $stmt->bindParam(':name', $name);
+      $stmt->bindParam(':category_id', $category_id);
+      $stmt->bindParam(':supplier_id', $supplier_id);
+      $stmt->bindParam(':price', $price);
+      $stmt->bindParam(':image', $image);
+      $stmt->bindParam(':description', $description);
 
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':description', $description);
+      $stmt->execute();
 
-        $stmt->execute();
-
-        $out['message'] = "Product added Successfully";
-      } else {
-        $out['error'] = true;
-        $out['message'] = "Invalid Token. Please login again.";
-      }
+      $out['message'] = "Product added Successfully";
     } catch (PDOException $e) {
       $out['error'] = true;
       $out['message'] = $e->getMessage();
@@ -155,16 +153,23 @@ $app->post('/update-product', function (Request $request, Response $response) {
 
   $id = $request->getParam('id');
   $name = $request->getParam('name');
+  $category_id = $request->getParam('category_id');
+  $supplier_id = $request->getParam('supplier_id');
+  $price = $request->getParam('price');
+  //$image = $request->getParam('image');
   $description = $request->getParam('description');
 
   if (empty($token)) {
     $out['error'] = true;
     $out['message'] = "Invalid Token. Please login again.";
-  } else if ($name == '') {
-    $out['error'] = true;
-    $out['message'] = "Product name is required";
   } else {
-    $sql = "UPDATE products SET name = :name, description = :description WHERE id = $id";
+    $sql = "UPDATE products SET
+				name 	        = :name,
+				category_id 	= :category_id,
+        supplier_id		= :supplier_id,
+        price		      = :price,
+        description 	= :description
+			WHERE id = $id";
 
     try {
       // Get DB Object
@@ -175,6 +180,10 @@ $app->post('/update-product', function (Request $request, Response $response) {
       $stmt = $db->prepare($sql);
 
       $stmt->bindParam(':name', $name);
+      $stmt->bindParam(':category_id', $category_id);
+      $stmt->bindParam(':supplier_id', $supplier_id);
+      $stmt->bindParam(':price', $price);
+      //$stmt->bindParam(':image', $image);
       $stmt->bindParam(':description', $description);
 
       $stmt->execute();
