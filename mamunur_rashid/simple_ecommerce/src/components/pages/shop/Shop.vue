@@ -6,31 +6,30 @@
       </h1>
       <a href="javascript:void(0)" class="fright" @click="logoutNow()">Logout</a>
     </div>
-    <div id="sidebar">
-      <ul class="nav">
-        <li>
-          <router-link to="/admin/category">Category</router-link>
-        </li>
-        <li>
-          <router-link to="/admin/supplier">Supplier</router-link>
-        </li>
-        <li>
-          <router-link to="/admin/product">Product</router-link>
-        </li>
-        <li>
-          <router-link to="/shop">Shop</router-link>
-        </li>
-      </ul>
+    <div id="shop">
+      <div id="shopContainer">
+        <router-view></router-view>
+      </div>
     </div>
-    <div id="main">
-      <router-view></router-view>
+    <div id="cart">
+      <div id="cartContainer">
+        <h2>Your Cart</h2>
+        <hr />
+        <table class="cart">
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Admin",
+  name: "Shop",
   data() {
     return {};
   },

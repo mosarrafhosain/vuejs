@@ -8,6 +8,8 @@ import Admin from './components/pages/admin/Admin.vue';
 import Category from './components/pages/admin/Category.vue';
 import Supplier from './components/pages/admin/Supplier.vue';
 import Product from './components/pages/admin/Product.vue';
+import Shop from './components/pages/shop/Shop.vue';
+import ShopProducts from './components/pages/shop/ShopProducts.vue';
 import Modal from './components/others/Modal.vue';
 
 Vue.config.productionTip = false;
@@ -53,6 +55,19 @@ const routes = [
         path: 'product',
         name: 'admin.product',
         component: Product
+      }
+    ]
+  },
+  {
+    path: '/shop',
+    name: 'shop',
+    component: Shop,
+    redirect: { path: '/shop/products' },
+    children: [
+      {
+        path: 'products',
+        name: 'shop.products',
+        component: ShopProducts
       }
     ]
   }
