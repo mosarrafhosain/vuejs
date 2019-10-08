@@ -3,13 +3,19 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import axios from 'axios';
 import iziToast from 'izitoast';
+import store from './store';
+
 import Login from './components/pages/Login.vue';
 import Admin from './components/pages/admin/Admin.vue';
 import Category from './components/pages/admin/Category.vue';
 import Supplier from './components/pages/admin/Supplier.vue';
 import Product from './components/pages/admin/Product.vue';
+
 import Shop from './components/pages/shop/Shop.vue';
 import ShopProducts from './components/pages/shop/ShopProducts.vue';
+import ShopProduct from './components/pages/shop/ShopProduct.vue';
+import Checkout from './components/pages/shop/Checkout.vue';
+
 import Modal from './components/others/Modal.vue';
 
 Vue.config.productionTip = false;
@@ -68,6 +74,16 @@ const routes = [
         path: 'products',
         name: 'shop.products',
         component: ShopProducts
+      },
+      {
+        path: 'product/:pid',
+        name: 'shop.product',
+        component: ShopProduct
+      },
+      {
+        path: 'checkout',
+        name: 'shop.checkout',
+        component: Checkout
       }
     ]
   }
@@ -86,5 +102,6 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app');

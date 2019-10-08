@@ -32,5 +32,6 @@ require '../src/routes/login.php';
 require '../src/routes/categories.php';
 require '../src/routes/suppliers.php';
 require '../src/routes/products.php';
+require '../src/routes/orders.php';
 
 $app->run();

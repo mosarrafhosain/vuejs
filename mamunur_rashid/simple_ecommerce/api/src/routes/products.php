@@ -37,20 +37,20 @@ $app->get('/get-products', function (Request $request, Response $response) {
 });
 
 // Get Single Product
-$app->post('/get-product', function (Request $request, Response $response) {
+$app->get('/get-product/{id}', function (Request $request, Response $response) {
   $out = array('error' => false);
 
   $token = $request->getHeader('Authorization');
   $token = explode(" ", $token[0]);
   $token = $token[1];
 
-  $id = $request->getParam('id');
+  $id = $request->getAttribute('id');
 
   if (empty($token)) {
     $out['error'] = true;
     $out['message'] = "Invalid Token. Please login again.";
   } else {
-    $sql = "SELECT * FROM products WHERE id = $id";
+    $sql = "SELECT products.*, categories.name AS category, suppliers.name AS supplier FROM products LEFT JOIN categories ON categories.id = products.category_id LEFT JOIN suppliers ON suppliers.id = products.supplier_id WHERE products.id = $id";
 
     try {
       // Get DB Object
