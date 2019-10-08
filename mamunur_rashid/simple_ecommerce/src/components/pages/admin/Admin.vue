@@ -25,10 +25,7 @@ export default {
     }
   },
   methods: {
-    logoutNow() {
-      localStorage.setItem("token", "");
-      this.$router.push({ name: "login" });
-    }
+    
   },
   components: {
     Header,

@@ -14,6 +14,12 @@ export default {
     return {
 
     };
+  },
+  methods: {
+    logoutNow() {
+      localStorage.setItem("token", "");
+      this.$router.push({ name: "login" });
+    }
   }
 };
 </script>
