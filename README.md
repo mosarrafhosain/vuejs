@@ -1,2 +1,2 @@
-# vuejs
+# Vue JS
 Practice Vue JS
