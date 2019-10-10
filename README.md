@@ -1,2 +1,2 @@
 # Vue JS
-Practice Vue JS
+Vue JS Projects
